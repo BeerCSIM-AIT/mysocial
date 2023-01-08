@@ -1,3 +1,9 @@
+<?php
+    session_start();
+    // if(!isset($_SESSION['user'])){
+    //     header("Location: login.php");
+    // }
+?>
 <!doctype html>
 <html lang="en">
 
@@ -16,31 +22,48 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">My Social</a>
+            <a class="navbar-brand" href="index.php">My Social</a>
             <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavId">
                 <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#" aria-current="page">Home <span class="visually-hidden">(current)</span></a>
+                        <a class="nav-link active" href="index.php" aria-current="page">Home <span class="visually-hidden">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">News Feed</a>
+                        <a class="nav-link" href="index.php?menu=feed">News Feed</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Market Place</a>
+                        <a class="nav-link" href="index.php?menu=market">Market Place</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Login</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">[Login Name]</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownId">
-                            <a class="dropdown-item" href="#">My Profile</a>
-                            <a class="dropdown-item" href="#">Logout</a>
-                        </div>
-                    </li>
+                    <?php
+                    if (!isset($_SESSION['user'])) {
+                    ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.php">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="register.php">Register</a>
+                        </li>
+                    <?php
+                    } else {
+                        $name = $_SESSION['user']->name;
+                    ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="login.php" id="dropdownId" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                [<?php echo $name; ?>]
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownId">
+                                <a class="dropdown-item" href="index.php?menu=profile">My Profile</a>
+                                <a class="dropdown-item" href="index.php?menu=editprofile">Edit Profile</a>
+                                <a class="dropdown-item" href="index.php?menu=changepassword">Change Password</a>
+                                <a class="dropdown-item" href="logout.php">Logout</a>
+                            </div>
+                        </li>
+                    <?php
+                    }
+                    ?>
                 </ul>
             </div>
         </div>
@@ -48,11 +71,37 @@
 
     <div class="container">
         <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <h1 class="mt-4">Simple Sidebar</h1>
-                <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-                <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which will toggle the menu when clicked.</p>
-            </div>
+            <?php
+                if(isset($_GET['menu'])){
+                    $menu=$_GET['menu'];
+                }else{
+                    $menu="";
+                }
+                switch($menu){
+                    case "profile":{
+                        $filename="profile/profile.php";
+                        break;
+                    }
+                    case "changepassword":{
+                        $filename="profile/changepassword.php";
+                        break;
+                    }
+                    case "editprofile":{
+                        $filename="profile/editprofile.php";
+                        break;
+                    }
+                    case "market":{
+                        $filename="marketplace.php";
+                        break;
+                    }
+                    case "feed":{
+                        $filename="newsfeed.php";
+                        break;
+                    }
+                    default: $filename="main.php";
+                }
+                include($filename);
+            ?>
         </div>
     </div>
 

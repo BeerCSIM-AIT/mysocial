@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!doctype html>
 <html lang="en">
 
@@ -18,6 +21,15 @@
       <div class="row justify-content-center">
         <div class="col-md-6">
           <h1 class="text-center mb-3">Let's Login</h1>
+          <?php
+            if(isset($_SESSION['errMsg'])){
+          ?>
+            <h6 class="text-center text-danger">
+                <?php echo $_SESSION['errMsg'];?>
+            </h6>
+          <?php      
+            }
+          ?>
           <form method="post" action="authen.php">
             <div class="form-group">
               <label for="email">Email address</label>
@@ -31,7 +43,7 @@
             <button type="submit" class="btn btn-primary btn-block">Log in</button>
           </form>
           <div class="text-center mt-3">
-            <a href="#">Forgot your password?</a>
+            <a href="register.php">Click here to register.</a>
           </div>
         </div>
       </div>
